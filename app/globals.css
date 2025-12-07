@@ -1,26 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
+/* 1. DEFINE THE THEME */
+@theme {
+  /* Fonts */
+  --font-orbitron: "Orbitron", sans-serif;
+  --font-rajdhani: "Rajdhani", sans-serif;
+
+  /* HUD Color Palette */
+  --color-hud-black: #050511;
+  --color-hud-dark: #0b0b1e;
+  --color-hud-glass: rgba(11, 11, 30, 0.7);
+  
+  /* Neon Palette */
+  --color-neon-cyan: #00f0ff;
+  --color-neon-green: #0aff0a;
+  --color-neon-purple: #bd00ff;
+  --color-neon-orange: #ff5e00;
+  --color-neon-blue: #0066ff;
+
+  /* Custom Neon Shadows */
+  --shadow-neon-cyan: 0 0 5px #00f0ff, 0 0 10px #00f0ff40;
+  --shadow-neon-green: 0 0 5px #0aff0a, 0 0 10px #0aff0a40;
+  --shadow-neon-purple: 0 0 5px #bd00ff, 0 0 10px #bd00ff40;
+  --shadow-neon-orange: 0 0 10px #ff5e00, 0 0 20px #ff5e0040;
+  --shadow-glass-inset: inset 0 0 20px rgba(0, 240, 255, 0.05);
+
+  /* Background Images */
+  --background-image-circuit-pattern: url('/images/circuit-bg.png'); 
+  --background-image-hud-vignette: radial-gradient(circle at center, transparent 40%, #050511 100%);
+
+  /* Animation Variables */
+  /* English: Maps CSS variables to the keyframes defined below */
+  --animate-pulse-fast: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-avatar-float: avatar-float 3.5s ease-in-out infinite;
+  --animate-flame-glow: flame-glow 2s ease-in-out infinite alternate;
+  
+  --animate-spin-slow: spin 8s linear infinite;
+  --animate-spin-reverse-slower: spin 12s linear infinite reverse;
+  --animate-holo-scan: holo-scan 2.5s linear infinite;
+  --animate-holo-flicker: holo-flicker 4s infinite;
+  --animate-burn: burn 0.5s ease-in-out infinite alternate;
+}
+
+/* 2. STANDARD CSS RESET & UTILITIES */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #050511;
+  --foreground: #ffffff;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-rajdhani);
+  overflow-x: hidden;
+}
+
+.scanline {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.3;
+}
+
+.bg-grid-pattern {
+  background-image: var(--background-image-circuit-pattern);
+  background-repeat: no-repeat;
+  background-size: cover; 
+  background-position: center;
+  opacity: 0.2;
+  z-index: -2;
+  position: absolute;
+  inset: 0;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #050511; }
+::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 3px; }
+
+/* 4. KEYFRAMES (Moved OUTSIDE @theme for safety) */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes avatar-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes flame-glow {
+  0% { filter: drop-shadow(0 -5px 8px rgba(0, 240, 255, 0.6)); }
+  100% { filter: drop-shadow(0 -12px 15px rgba(0, 240, 255, 0.9)); }
+}
+
+@keyframes holo-scan {
+  0% { background-position: 0% -100%; }
+  100% { background-position: 0% 200%; }
+}
+
+@keyframes holo-flicker {
+  0%, 100% { opacity: 0.9; }
+  5% { opacity: 0.8; }
+  10% { opacity: 0.9; }
+  15% { opacity: 1; }
+  50% { opacity: 0.9; }
+  55% { opacity: 0.7; }
+  60% { opacity: 0.9; }
+  95% { opacity: 1; }
+}
+
+@keyframes burn {
+  0% { transform: scale(1) rotate(-2deg); filter: brightness(1); }
+  100% { transform: scale(1.1) rotate(2deg); filter: brightness(1.3); }
 }
